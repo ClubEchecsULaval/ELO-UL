@@ -134,7 +134,7 @@ async function finishTournament(tid:number){
 }
 async function route(req:Request){
  const url=new URL(req.url);
- const parts=url.pathname.replace(/\/+$/,'').split('/').slice(2); // api/club-tournois/{id}/...
+ const parts=url.pathname.replace(/\/+$/,'').split('/').slice(3); // api/club-tournois/{id}/...
  const admin=isAdmin(req);
  if(req.method==='GET'){
   if(parts.length===0){const ts=admin?await db.select().from(tournaments).orderBy(desc(tournaments.id)):await db.select().from(tournaments).where(sql`${tournaments.status} <> 'draft'`).orderBy(desc(tournaments.id));return withNoCache({tournaments:ts,admin});}
