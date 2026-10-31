@@ -14,3 +14,129 @@
 @media(max-width:910px){.mobile-menu-button{display:flex;margin-left:auto}.header-inner{height:77px}.main-nav{position:absolute;top:77px;left:0;right:0;display:none;flex-direction:column;align-items:stretch;background:var(--paper);padding:10px 24px 23px;gap:0;border-bottom:1px solid var(--line);box-shadow:0 13px 20px #0001}.main-nav.open{display:flex}.nav-link{padding:15px;font-size:14px}.nav-link.is-active:after{bottom:8px;left:0;right:auto;width:3px;height:29px}.header-cta{display:none}.hero-grid{min-height:auto;grid-template-columns:1fr 1fr}.hero-copy h1{font-size:clamp(62px,7.6vw,88px)}.hero-visual{padding-left:24px}.float-stamp{right:0}.feature-grid{gap:13px}.feature-card{min-height:370px;padding:20px}.feature-illustration span{font-size:110px}.feature-card h3{font-size:28px}.contrast-grid{gap:35px}.calendar-bottom{grid-template-columns:1fr}.ranking-toolbar{align-items:start;flex-direction:column}.rules-panel{padding:35px}.calculator{gap:25px;padding:35px}.site-footer .footer-top{gap:35px}.mission-grid,.faq{gap:30px}}
 @media(max-width:700px){.container{width:calc(100% - 36px)}.section{padding:65px 0}.inner-section{padding:50px 0 75px}.hero-grid{display:flex;flex-direction:column}.hero-copy{padding:67px 0 20px}.hero-copy h1{font-size:clamp(64px,15vw,95px);margin:25px 0}.hero-lead{font-size:16px}.hero-actions{gap:6px}.hero-note{margin-top:31px}.hero-visual{height:350px;padding:28px 13px 35px;width:100%;justify-content:center}.art-frame{max-width:350px;aspect-ratio:1.25;box-shadow:14px 17px 0 #d8dad1}.art-piece-main{font-size:195px}.float-stamp{width:86px;height:86px;right:12px;bottom:23px;font-size:8px}.float-stamp b{font-size:15px;right:8px;bottom:8px}.ticker-inner{overflow-x:auto;justify-content:flex-start;gap:27px;white-space:nowrap;min-height:55px}.ticker span{font-size:9px}.section-heading{display:block;margin-bottom:28px}.section-heading h2,.mission-grid h2,.rules-panel h2,.faq h2{font-size:43px}.section-heading>p{margin-top:15px}.feature-grid,.formats-grid,.elo-rule-grid,.values-grid{grid-template-columns:1fr}.feature-card{min-height:250px;display:grid;grid-template-columns:1fr 120px;grid-template-rows:45px auto;gap:5px}.feature-card .feature-top{grid-column:1/3}.feature-card .feature-illustration{grid-column:2;grid-row:2}.feature-card .feature-illustration span{font-size:102px}.feature-card>div:last-child{grid-column:1;grid-row:2;align-self:end}.feature-card h3{font-size:27px}.feature-card p{font-size:12px}.contrast-grid,.rules-panel,.calculator,.mission-grid,.team-panel,.faq,.about-intro-grid{grid-template-columns:1fr}.contrast-grid h2,.invite-inner h2,.calculator-intro h2,.rejoin h2{font-size:58px}.formula-art{height:245px;padding:25px}.formula-art>div{font-size:32px}.page-hero{padding:68px 0}.page-hero h1{font-size:clamp(57px,13vw,82px)}.page-hero p{font-size:15px}.tournament-symbol,.about-art{display:none}.calendar-toolbar{padding:22px 17px 15px;align-items:start;flex-direction:column}.calendar-toolbar h2{font-size:30px}.calendar-filters{padding:10px 17px 20px;align-items:start;flex-direction:column}.calendar-grid{margin:0 10px 20px}.calendar-day-name{font-size:9px}.calendar-cell{min-height:66px;padding:7px 4px}.calendar-number{font-size:10px}.calendar-mark{font-size:0;margin-top:10px;padding:0;width:7px;height:7px;border-radius:50%;border:0}.calendar-bottom{padding:20px}.info-strip{flex-direction:column;align-items:start;padding:24px}.empty-state{grid-template-columns:1fr;gap:0;padding:30px 25px}.empty-icon{font-size:90px}.empty-state h3{font-size:30px}.formats-grid{gap:12px}.format-card{min-height:270px}.format-piece{font-size:70px}.rules-panel{margin-top:60px}.calculator-intro h2{font-size:51px}.field-pair{grid-template-columns:1fr}.note-panel{padding:20px}.ranking-summary{grid-template-columns:1fr 1fr}.ranking-summary>div:last-child{grid-column:1/3}.ranking-toolbar{padding:23px 17px}.ranking-controls{flex-wrap:wrap;width:100%}.search-wrap{width:100%}.search-wrap input{width:100%}.ranking-table td,.ranking-table th{padding:14px 20px}.ranking-bottom{padding:20px;flex-wrap:wrap}.mission-grid{padding-bottom:30px}.values-grid{padding:22px 0 55px}.team-panel>div:first-child{padding:28px}.team-panel h2{font-size:40px}.team-pattern{height:185px}.team-pattern span{font-size:98px}.footer-top{grid-template-columns:1fr 1fr;gap:25px;padding-top:65px}.footer-brand{grid-column:1/3}.footer-bottom{font-size:10px}.faq h2{font-size:43px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Ajustements demandés : identité complète, navigation agrandie, sept pages. */
+.brand{gap:14px;min-width:282px}
+.brand-symbol{font-size:58px}
+.brand-words strong{font-size:18px;letter-spacing:.005em;font-weight:800;text-transform:none}
+.brand-words small{font-size:13px;letter-spacing:.012em;margin-top:5px;text-transform:none;color:#4b5d54;font-weight:600}
+.header-inner{gap:18px;min-height:100px;height:auto}
+.main-nav{gap:clamp(12px,1.35vw,22px);justify-content:center}
+.nav-link{font-size:14px;padding:40px 0;font-weight:700}
+.header-cta{font-size:13px;padding:15px 16px}
+/* Retrait des numéros de mise en page tout en conservant les rangs et les numéros de ronde utiles. */
+.feature-top{justify-content:flex-end}
+.steps>div{display:block;padding:15px 0}
+.rule-card h3{margin-top:0}
+/* Page Contact */
+.contact-layout{display:grid;grid-template-columns:1fr 1.1fr;align-items:start;gap:90px}
+.contact-layout h2{font-family:var(--display);font-weight:400;font-size:clamp(44px,5vw,70px);line-height:1.09;margin:0 0 24px}
+.contact-layout>div:first-child>p{max-width:470px;font-size:16px}
+.contact-note{display:flex;align-items:start;gap:15px;margin-top:40px;padding-top:23px;border-top:1px solid var(--line)}
+.contact-note>span{font-size:34px;color:var(--red)}
+.contact-note p{font-size:13px;margin:0}.contact-note a{color:var(--red);text-decoration:underline;text-underline-offset:3px}
+.contact-cards{display:grid;gap:18px}
+.contact-card{display:flex;align-items:start;gap:25px;padding:35px;background:#fff;border:1px solid var(--line);transition:transform .2s,box-shadow .2s}
+.contact-card:hover{transform:translateY(-4px);box-shadow:0 15px 35px #14232112}
+.contact-icon{width:60px;height:60px;display:grid;place-items:center;flex:0 0 60px;background:#f0ece6;color:var(--red);font-size:35px}
+.fb-icon{background:#e5ebf7;color:#2269ba;font-family:Arial,sans-serif;font-weight:800;font-size:42px}
+.contact-card .overline{margin:0 0 9px}.contact-card h3{font:400 30px var(--display);margin-bottom:7px}.contact-card p{overflow-wrap:anywhere;font-size:14px;margin-bottom:20px}
+.contact-link{font-size:12px;color:var(--red);font-weight:800}
+.contact-cta{background:var(--ink);color:#fff;padding:55px 65px;margin:85px 0 15px;display:flex;justify-content:space-between;align-items:end;gap:30px}
+.contact-cta h2{font:400 clamp(40px,5vw,64px)/1.13 var(--display);margin:0}
+/* Un futur espace joueur : la maquette n'active pas des comptes ni des données réelles. */
+.tournament-platform{margin:85px 0 95px;border:1px solid #d5d9d1;background:#f1f2ed}
+.platform-intro{padding:45px 50px;display:grid;grid-template-columns:1.15fr 1fr;gap:45px;align-items:start}
+.platform-intro h2{font:400 clamp(42px,4.3vw,64px)/1.15 var(--display);margin:0 0 19px}
+.platform-intro p{font-size:14px;max-width:570px}
+.platform-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.platform-chips span{border:1px solid #c5cec3;background:#fff;padding:9px 12px;font-size:11px;font-weight:800;color:var(--ink)}
+.platform-access{background:#fff;padding:28px 30px;border:1px solid #dce1d8}
+.platform-access h3{font:400 31px var(--display);margin:18px 0 10px}
+.platform-access p{font-size:13px}
+.platform-status,.demo-pill{font-size:10px;letter-spacing:.12em;font-weight:800;color:#8a433a;display:inline-block}
+.platform-access button:disabled{opacity:.55;cursor:not-allowed}
+.platform-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-block:1px solid #d3dbd0;background:#e9ede7}
+.platform-flow>div{padding:25px 22px;border-right:1px solid #d3dbd0}
+.platform-flow>div:last-child{border-right:0}
+.platform-flow>div>span{display:block;font:normal 37px var(--display);color:var(--red);margin-bottom:12px}
+.platform-flow strong{display:block;font-size:14px;margin-bottom:7px}
+.platform-flow p{font-size:12px;line-height:1.5;margin:0}
+.demo-platform{padding:43px 50px 48px;background:#fff}
+.demo-platform-heading{display:flex;justify-content:space-between;align-items:center;gap:20px}
+.demo-platform-heading h3{font:400 38px var(--display);margin:0}
+.demo-platform-heading .overline{margin-bottom:9px}
+.demo-disclaimer{max-width:720px;font-size:13px;margin:17px 0 25px}
+.demo-platform-controls{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.demo-platform-controls label{display:grid;gap:7px;flex:1;min-width:170px;font-size:12px;font-weight:700}
+.demo-platform-controls select{height:47px;padding:0 13px;border:1px solid #bec8bc;background:#f7f8f5;color:var(--ink);width:100%}
+.demo-platform-match{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.demo-platform-match>div{background:#eaf0ea;padding:23px 24px;display:grid;gap:11px}
+.demo-platform-match small{font-size:10px;letter-spacing:.08em;color:#596c5e;font-weight:800}
+.demo-platform-match strong{font:400 clamp(25px,2.6vw,35px) var(--display)}
+.demo-platform-result{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:24px 0;border-bottom:1px solid var(--line)}
+.demo-platform-result strong{font-size:14px}.demo-platform-result p{font-size:12px;margin:6px 0 0}
+.demo-result-actions{display:flex;gap:7px;flex-wrap:wrap}
+.demo-result-actions button{padding:12px 17px;background:#fff;border:1px solid #acb8ac;font-size:12px;font-weight:700;color:var(--ink)}
+.demo-result-actions button:hover,.demo-result-actions button.is-selected{background:var(--ink);color:#fff}
+.demo-feedback{font-size:13px;font-weight:600;color:#65736b;margin:18px 0 0}
+@media(max-width:1230px){.header-inner{gap:12px}.brand{min-width:260px}.brand-words strong{font-size:16px}.brand-words small{font-size:12px}.main-nav{gap:10px}.nav-link{font-size:13px}.header-cta{font-size:12px;padding:13px}}
+@media(max-width:1020px){.header-cta{display:none}.main-nav{justify-content:flex-end}.brand{min-width:255px}}
+@media(max-width:910px){.header-inner{height:80px;min-height:80px}.brand{min-width:0}.brand-symbol{font-size:51px}.brand-words strong{font-size:17px}.brand-words small{font-size:12px}.main-nav{top:80px;justify-content:flex-start;gap:0}.nav-link{padding:14px;font-size:15px}.contact-layout{grid-template-columns:1fr;gap:35px}.platform-intro{grid-template-columns:1fr;gap:22px}}
+@media(max-width:700px){.contact-card{padding:25px;gap:16px}.contact-icon{width:48px;height:48px;flex-basis:48px;font-size:27px}.contact-cta{padding:33px 25px;display:grid}.tournament-platform{margin:50px 0}.platform-intro,.demo-platform{padding:27px 22px}.platform-flow{grid-template-columns:1fr 1fr}.platform-flow>div:nth-child(2){border-right:0}.platform-flow>div:nth-child(-n+2){border-bottom:1px solid #d3dbd0}.demo-platform-heading{align-items:start;flex-direction:column}.demo-platform-heading h3{font-size:32px}.demo-platform-match{grid-template-columns:1fr}.demo-platform-result{align-items:start;flex-direction:column}.demo-result-actions button{padding:11px 14px}.contact-layout h2{font-size:45px}}
+@media(max-width:400px){.brand-words strong{font-size:15px}.brand-words small{font-size:11px}.platform-flow{grid-template-columns:1fr}.platform-flow>div{border-right:0!important;border-bottom:1px solid #d3dbd0}}
+
+/* ===== Tournois locaux — interface publique et administration ===== */
+.tournament-action-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:3rem;align-items:center;margin-bottom:2.5rem}
+.tournament-action-grid h2,.admin-top h2{font-family:var(--font-display,Georgia,serif);font-weight:500;font-size:clamp(2.2rem,4vw,3.8rem);letter-spacing:-.03em;line-height:1.08;margin:.4em 0}
+.tournament-action-grid h2 em,.admin-top h2 em{color:#a0474b}
+.tournament-action-grid p{max-width:58ch;line-height:1.7}
+.tournament-action-box{background:#e7ebe4;padding:2rem;border:1px solid #d5dad0}
+.tournament-action-box h3{font-family:Georgia,serif;font-weight:500;font-size:1.7rem;margin:.75rem 0 .3rem}
+.tournament-action-box p{font-size:.95rem;margin-bottom:1.25rem}
+.tournament-public-layout,.tournament-admin-grid{display:grid;grid-template-columns:minmax(270px,.75fr) minmax(0,1.45fr);gap:1.25rem;align-items:start}
+.tournament-panel{padding:1.6rem;background:#fff;border:1px solid #e3e3df;box-shadow:0 5px 25px rgba(26,40,36,.035);min-width:0}
+.tournament-panel h3{font-size:1.14rem;margin:0 0 1rem}
+.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;border-bottom:1px solid #e2e5df;padding-bottom:.85rem;margin-bottom:1rem}
+.panel-heading h3{margin:0}
+.tournament-list{display:flex;flex-direction:column;gap:.55rem}
+.tournament-list-item{width:100%;display:block;text-align:left;border:1px solid #dfe2da;background:#f7f8f5;padding:.9rem 1rem;color:#152321;cursor:pointer;font:inherit}
+.tournament-list-item.is-active{border-color:#a0474b;background:#fcf7f5}
+.tournament-list-item strong{display:block;margin-bottom:.3rem}
+.tournament-list-item small,.tournament-muted,.tournament-caption{color:#63716b}
+.tournament-text-button{background:transparent;border:0;cursor:pointer;text-decoration:underline;font:inherit;font-size:.85rem}
+.tournament-back{display:inline-block;margin-top:1rem;color:#a0474b;text-decoration:underline}
+.tournament-table{width:100%;border-collapse:collapse;font-size:.86rem}
+.tournament-table th,.tournament-table td{text-align:left;padding:.7rem .5rem;border-bottom:1px solid #e6e7e3;vertical-align:middle}
+.tournament-table th{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:#64706a}
+.tournament-table-wrap{overflow-x:auto;margin:1rem 0}
+.tournament-label{display:inline-block;background:#eef1eb;border-radius:3px;padding:.25rem .5rem;font-size:.73rem;white-space:nowrap}
+.tournament-label.is-live{background:#e7f0e7;color:#226d47}
+.tournament-section-title{font-family:Georgia,serif;font-size:1.45rem;margin:1.6rem 0 .65rem}
+.tournament-round{border:1px solid #e1e5df;margin:.75rem 0;padding:1rem}
+.tournament-round-head{display:flex;justify-content:space-between;gap:1rem;align-items:center}
+.tournament-round-head h4{margin:0}
+.tournament-note{background:rgba(255,255,255,.09);padding:1.4rem;color:#fff}
+.tournament-note p{line-height:1.7;margin-bottom:0}
+.tournament-login{max-width:700px;margin:0 auto}
+.tournament-login h2{font-size:2.5rem;font-family:Georgia,serif}
+.tournament-login h2 em{color:#a0474b}
+.tournament-inline-form,.tournament-form{display:flex;flex-direction:column;align-items:stretch;gap:.9rem}
+.tournament-inline-form label,.tournament-form label{display:flex;flex-direction:column;gap:.35rem;font-size:.88rem;font-weight:600}
+.tournament-inline-form input,.tournament-form input,.tournament-result-select{border:1px solid #c9cec6;background:#fff;color:#14231e;border-radius:0;padding:.75rem;font:inherit;width:100%;min-width:90px;box-sizing:border-box}
+.tournament-inline-form button,.tournament-form button{align-self:flex-start}
+.tournament-subtitle{margin-top:2rem!important;padding-top:1.2rem;border-top:1px solid #e4e5e0}
+.tournament-flash{min-height:1.2em;margin:1rem 0;color:#a0474b;font-size:.9rem}
+.tournament-flash.is-success{color:#197047}
+.tournament-admin-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin:1.1rem 0}
+.tournament-small-button{border:1px solid #cbd2c7;background:#fff;padding:.4rem .65rem;cursor:pointer;color:#15312a;font:inherit;font-size:.78rem}
+.tournament-small-button:disabled{opacity:.4;cursor:not-allowed}
+.tournament-section-divider{border:0;border-top:1px solid #e1e4df;margin:1.25rem 0}
+.tournament-admin-info{font-size:.87rem;line-height:1.6;color:#53635d}
+.tournament-result-select{padding:.4rem;font-size:.82rem}
+.tournament-submit-result{padding:.43rem .6rem;border:0;background:#19342c;color:#fff;cursor:pointer;margin:.2rem}
+.tournament-open-status{font-size:.9rem;color:#64706a;margin:.4rem 0 1rem}
+@media(max-width:900px){.tournament-action-grid,.tournament-public-layout,.tournament-admin-grid{grid-template-columns:1fr}.tournament-action-grid{gap:1rem}.tournament-panel{padding:1rem}}
+
+.tournament-form textarea{border:1px solid #c9cec6;color:#14231e;background:#fff;padding:.75rem;font:inherit;width:100%;box-sizing:border-box;resize:vertical;min-height:7rem}

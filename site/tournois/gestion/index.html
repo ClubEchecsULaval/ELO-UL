@@ -1,0 +1,37 @@
+<!doctype html><html lang="fr-CA"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#172423"><meta name="description" content="Tournois de blitz, rapides et classiques organisés par le Club d’échecs de l’Université Laval."><link rel="icon" href="/favicon.svg" type="image/svg+xml"><title>Gestion des tournois | Club d'échecs de l'Université Laval</title><link rel="stylesheet" href="/assets/css/style.css"><script type="module" src="/assets/js/app.js"></script><script type="module" src="/assets/js/tournois-ui.js"></script></head><body data-page="gestion-tournois">
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+<header class="site-header" id="haut"><div class="container header-inner">
+<a class="brand" href="/" aria-label="Club d'échecs de l'Université Laval — Accueil"><span class="brand-symbol" aria-hidden="true">♞</span><span class="brand-words"><strong>Club d'échecs</strong><small>de l’Université Laval</small></span></a>
+<button type="button" class="mobile-menu-button" data-menu-toggle aria-controls="main-navigation" aria-expanded="false" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
+<nav class="main-nav" id="main-navigation" aria-label="Navigation principale"><a href="/" class="nav-link " >Accueil</a>
+<a href="/calendrier/" class="nav-link " >Calendrier</a>
+<a href="/tournois/" class="nav-link is-active" aria-current="page">Tournois</a>
+<a href="/elo-ul/" class="nav-link " >Elo UL</a>
+<a href="/classement/" class="nav-link " >Classement</a>
+<a href="/a-propos/" class="nav-link " >À propos</a>
+<a href="/contact/" class="nav-link">Contact</a></nav>
+<a class="header-cta" href="/calendrier/">Voir les activités <span aria-hidden="true">↗</span></a>
+</div></header>
+
+<main id="contenu"><section class="page-hero tournament-hero"><div class="container tournament-hero-inner"><div><div class="eyebrow"><span class="eyebrow-line"></span> ESPACE DU COMITÉ</div><h1>Gestion des <em>tournois.</em></h1><p>Créez un tournoi, saisissez les joueurs, générez les rondes et confirmez les résultats.</p><a class="tournament-back" href="/tournois/">← Retour aux appariements publics</a></div><div class="tournament-symbol" aria-hidden="true">♜</div></div></section>
+<section class="section inner-section"><div class="container">
+<div class="tournament-login tournament-panel" id="tournament-login"><span class="overline">ACCÈS PROTÉGÉ</span><h2>Code <em>organisateur.</em></h2>
+<p>Le code n'est pas enregistré dans les fichiers du site ni conservé dans le stockage du navigateur. Il est vérifié sur le serveur.</p>
+<form id="tournament-login-form" class="tournament-inline-form"><label>Code du comité<input type="password" id="organizer-code" required autocomplete="off" placeholder="Code d'accès"/></label><button class="btn btn-primary" type="submit">Ouvrir l'espace ↗</button></form>
+<p class="tournament-flash" id="login-flash" aria-live="polite"></p></div>
+<div id="tournament-admin" hidden>
+<div class="panel-heading admin-top"><div><span class="overline">GESTION EN DIRECT</span><h2>Tableau de <em>bord.</em></h2></div><button id="admin-logout" type="button" class="btn btn-outline">Se déconnecter</button></div>
+<div class="tournament-admin-grid"><section class="tournament-panel"><h3>Créer un tournoi</h3><form id="create-tournament-form" class="tournament-form">
+<label>Nom du tournoi<input required name="name" maxlength="120" placeholder="Ex. Blitz du vendredi"/></label>
+<label>Nombre de rondes (système suisse)<input required name="rounds" type="number" min="1" max="15" value="5"/></label>
+<button class="btn btn-primary" type="submit">Créer le tournoi ↗</button></form>
+<h3 class="tournament-subtitle">Mes tournois</h3><div id="admin-tournaments" class="tournament-list">Chargement…</div></section>
+<section class="tournament-panel"><div class="panel-heading"><h3>Gérer le tournoi sélectionné</h3><span id="admin-tournament-status" class="tournament-caption"></span></div>
+<div id="admin-tournament-detail"><p class="tournament-muted">Créez un tournoi ou sélectionnez-en un dans la liste.</p></div></section></div>
+<p class="tournament-flash" id="admin-flash" role="status" aria-live="polite"></p>
+</div></div></section></main>
+<footer class="site-footer"><div class="container footer-top">
+<div class="footer-brand"><span class="footer-mark" aria-hidden="true">♞</span><h2>À chaque partie,<br>une nouvelle rencontre.</h2><p>Le Club d'échecs de l'Université Laval rassemble les passionnés, les curieux et les compétiteurs autour du même échiquier.</p></div>
+<div class="footer-col"><h3>Explorer</h3><a href="/calendrier/">Calendrier</a><a href="/tournois/">Tournois</a><a href="/elo-ul/">Elo UL</a></div>
+<div class="footer-col"><h3>Le club</h3><a href="/classement/">Classement</a><a href="/a-propos/">À propos</a><a href="/contact/">Contact</a><a href="/a-propos/#rejoindre">Nous rejoindre</a></div>
+</div><div class="container footer-bottom"><span>© <span data-current-year>2026</span> Club d'échecs de l'Université Laval</span><span>Créé pour la communauté échiquéenne de Québec.</span><a href="#haut">Retour en haut ↑</a></div></footer></body></html>
