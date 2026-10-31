@@ -4,6 +4,7 @@ import {db} from '../../db/index.js';
 import {ulTournaments as tournaments,ulTournamentPlayers as players,ulTournamentRounds as rounds,ulTournamentPairings as pairs} from '../../db/tournament-schema.js';
 import {isAdmin,sameOrigin,json} from '../../lib/tournament-auth.mjs';
 import {pairSwiss,standings} from '../../lib/swiss.mjs';
+import {ulCalendarActivities as activities} from '../../db/calendar-schema.js';
 
 class APIError extends Error {constructor(public status:number,message:string){super(message);}}
 const fail=(status:number,msg:string):never=>{throw new APIError(status,msg);};
@@ -174,11 +175,46 @@ async function finishTournament(tid:number){
   return {ok:true};
  });
 }
+
+// Calendrier public, avec écriture réservée au comité et même session que Tournois.
+// Le chemin reste sous /club-api/tournois pour recevoir le cookie de session existant.
+const CALENDAR_TYPES=['jeu_libre','atelier','tournoi'];
+function checkCalendarDate(input:unknown):string {
+ if(typeof input!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(input))fail(422,'Date invalide (AAAA-MM-JJ).');
+ const [year,month,day]=input.split('-').map(Number);
+ if(year<2020||year>2100||new Date(Date.UTC(year,month-1,day)).toISOString().slice(0,10)!==input)fail(422,'Date inexistante.');
+ return input;
+}
+function checkCalendarTime(input:unknown):string {
+ if(typeof input!=='string'||!/^([01]\d|2[0-3]):[0-5]\d$/.test(input))fail(422,'Heure invalide (HH:MM).');
+ return input;
+}
+async function listCalendarActivities() {
+ const list=await db.select({id:activities.id,name:activities.name,eventDate:activities.eventDate,startTime:activities.startTime,location:activities.location,category:activities.category})
+  .from(activities).orderBy(asc(activities.eventDate),asc(activities.startTime),asc(activities.id)).limit(2000);
+ return {events:list};
+}
+async function addCalendarActivity(body:any) {
+ const name=validText(body.name,120),location=validText(body.location,180);
+ const eventDate=checkCalendarDate(body.date),startTime=checkCalendarTime(body.time);
+ if(!CALENDAR_TYPES.includes(body.category))fail(422,'Type invalide : atelier, tournoi ou jeu libre.');
+ const [event]=await db.insert(activities).values({name,location,eventDate,startTime,category:body.category}).returning();
+ return {ok:true,event:{id:event.id,name:event.name,eventDate:event.eventDate,startTime:event.startTime,location:event.location,category:event.category}};
+}
+async function deleteCalendarActivity(id:number,body:any) {
+ const [record]=await db.select().from(activities).where(eq(activities.id,id));
+ if(!record)fail(404,'Activité introuvable.');
+ if(body.confirmation!==record.name)fail(422,'Confirmez le nom exact de l’activité.');
+ await db.delete(activities).where(eq(activities.id,id));
+ return {ok:true,deleted:id};
+}
+
 async function route(req:Request){
  const url=new URL(req.url);
  const parts=url.pathname.replace(/\/+$/,'').split('/').slice(3); // api/club-tournois/{id}/...
  const admin=isAdmin(req);
  if(req.method==='GET'){
+  if(parts.length===1 && parts[0]==='calendrier')return withNoCache(await listCalendarActivities());
   if(parts.length===0){const ts=admin?await db.select().from(tournaments).orderBy(desc(tournaments.id)):await db.select().from(tournaments).where(sql`${tournaments.status} <> 'draft'`).orderBy(desc(tournaments.id));return withNoCache({tournaments:ts,admin});}
   if(parts.length===1)return withNoCache(await readDetails(validId(parts[0]),admin));
   return fail(404,'Route introuvable.');
@@ -189,6 +225,11 @@ async function route(req:Request){
  if(!req.headers.get('content-type')?.includes('application/json'))return fail(415,'JSON attendu.');
  let body:any;try{body=await req.json();}catch{return fail(400,'JSON invalide.');}
  if(!body || typeof body!=='object' || Array.isArray(body))return fail(400,'Objet JSON attendu.');
+ if(parts[0]==='calendrier'){
+  if(parts.length===1)return withNoCache(await addCalendarActivity(body),201);
+  if(parts.length===3&&parts[2]==='delete')return withNoCache(await deleteCalendarActivity(validId(parts[1]),body));
+  return fail(404,'Route calendrier introuvable.');
+ }
  if(parts.length===0)return withNoCache(await createTournament(body),201);
  const id=validId(parts[0]);
  if(parts[1]==='delete'&&parts.length===2)return withNoCache(await deleteTournament(id,body));
