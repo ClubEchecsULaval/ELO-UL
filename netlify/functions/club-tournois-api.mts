@@ -50,6 +50,28 @@ async function assertRosterEditable(tid:number,tx:any){
  return t;
 }
 
+/** Supprime un tournoi et uniquement ses données (rondes, appariements, joueurs).
+ *  L'opération exige une session organisateur ET une confirmation du nom exact.
+ *  L'ordre explicite protège les clés étrangères RESTRICT et rend la suppression atomique.
+ */
+async function deleteTournament(tid:number,body:any){
+ return db.transaction(async tx=>{
+  await tx.execute(sql`SELECT id FROM ul_tournaments WHERE id = ${tid} FOR UPDATE`);
+  const t=await findTournament(tid,tx);
+  if(typeof body.confirmation!=='string' || body.confirmation!==t.name){
+   fail(422,'La confirmation du nom du tournoi est incorrecte.');
+  }
+  const rs=await tx.select({id:rounds.id}).from(rounds).where(eq(rounds.tournamentId,tid));
+  if(rs.length){
+   await tx.delete(pairs).where(inArray(pairs.roundId,rs.map(r=>r.id)));
+  }
+  await tx.delete(rounds).where(eq(rounds.tournamentId,tid));
+  await tx.delete(players).where(eq(players.tournamentId,tid));
+  await tx.delete(tournaments).where(eq(tournaments.id,tid));
+  return {ok:true,deleted:true};
+ });
+}
+
 async function addPlayer(tid:number,body:any){
  const name=validText(body.name,100);const seedRating=body.seedRating===undefined||body.seedRating===''?1200:Number(body.seedRating);
  if(!Number.isInteger(seedRating)||seedRating<0||seedRating>3500)fail(422,'Cote initiale entre 0 et 3500 requise.');
@@ -169,6 +191,7 @@ async function route(req:Request){
  if(!body || typeof body!=='object' || Array.isArray(body))return fail(400,'Objet JSON attendu.');
  if(parts.length===0)return withNoCache(await createTournament(body),201);
  const id=validId(parts[0]);
+ if(parts[1]==='delete'&&parts.length===2)return withNoCache(await deleteTournament(id,body));
  if(parts[1]==='players'&&parts.length===2)return withNoCache(await addPlayer(id,body),201);
  if(parts[1]==='players'&&parts[2]==='batch'&&parts.length===3)return withNoCache(await addPlayersBatch(id,body),201);
  if(parts[1]==='players'&&parts[3]==='remove'&&parts.length===4)return withNoCache(await setPlayerActive(id,validId(parts[2]),false));

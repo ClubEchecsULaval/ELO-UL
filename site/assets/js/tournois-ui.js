@@ -1,3 +1,4 @@
+import { roundRankingModel } from './round-score.mjs';
 // Club d'échecs UL — tournament pages. All writes run through server-side authorization.
 const API='/club-api/tournois';
 const $=(sel,root=document)=>root.querySelector(sel);
@@ -26,14 +27,20 @@ function roundsTable(r,players,editable=false){
  return `<section class="tournament-round"><div class="tournament-round-head"><h4>Ronde ${r.number}</h4><span class="tournament-label ${r.status==='active'?'is-live':''}">${r.status==='active'?'En cours':'Terminée'}</span></div><div class="tournament-table-wrap"><table class="tournament-table"><thead><tr><th>Table</th><th>Blancs</th><th>Noirs</th><th>Résultat</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 function scoreboard(details){
- const rows=details.standings.map((p,i)=>`<tr><td>${i+1}</td><td>${esc(p.name)}${p.active===false?' <small>(retiré)</small>':''}</td><td>${p.points}</td><td>${p.played}</td><td>${p.wins}</td><td>${p.draws}</td></tr>`).join('');
- return `<div class="tournament-table-wrap"><table class="tournament-table"><thead><tr><th>Rang*</th><th>Joueur</th><th>Points</th><th>Parties</th><th>V</th><th>N</th></tr></thead><tbody>${rows}</tbody></table></div><p class="tournament-muted" style="font-size:.8rem">* Classement indicatif par points, puis cote initiale. Les départages officiels ne sont pas calculés.</p>`;
+ const model=roundRankingModel(details);
+ const headers=model.columns.map(n=>`<th scope="col" style="text-align:center;min-width:44px">${n}</th>`).join('');
+ const rows=model.rows.map(p=>{
+  const cells=p.cells.map(c=>`<td style="text-align:center;white-space:nowrap" title="${esc(c.title)}"><span class="round-result round-${c.kind}">${esc(c.text)}</span></td>`).join('');
+  return `<tr><td style="font-weight:700">${p.rank}</td><td style="white-space:nowrap">${esc(p.name)}${p.active?'':' <small>(retiré)</small>'}</td>${cells}<td style="text-align:center;font-weight:700;white-space:nowrap">${esc(p.total)}</td></tr>`;
+ }).join('');
+ const minWidth=250+model.columns.length*50;
+ return `<div class="tournament-table-wrap" role="region" aria-label="Classement par ronde" tabindex="0"><table class="tournament-table tournament-standings-by-round" style="min-width:${minWidth}px"><thead><tr><th scope="col">#</th><th scope="col">Nom</th>${headers}<th scope="col">Total</th></tr></thead><tbody>${rows||`<tr><td colspan="${model.columns.length+3}">Aucun joueur inscrit.</td></tr>`}</tbody></table></div><p class="tournament-muted" style="font-size:.8rem">+n : victoire · −n : défaite · =n : nulle, contre le joueur actuellement classé n<sup>e</sup>. Bye : 0,5 point. Le total indique les points sur les rondes auxquelles le joueur a participé. Les numéros des adversaires suivent le classement actuel et peuvent donc évoluer.</p>`;
 }
 function detailsHtml(d,editable=false){
  const t=d.tournament;
  return `<div><div class="panel-heading"><div><strong>${esc(t.name)}</strong><div class="tournament-open-status">Suisse simplifié · ${esc(statusLabel(t.status))} · ${d.players.filter(p=>p.active!==false).length} actifs / ${d.players.length} inscrits</div></div><span class="tournament-label">${d.rounds.length} / ${t.roundsPlanned} rondes</span></div>
  ${d.rounds.length?'<h4 class="tournament-section-title">Appariements et résultats</h4>'+d.rounds.slice().reverse().map(r=>roundsTable(r,d.players,editable && r.number===d.rounds.length)).join(''):'<p class="tournament-muted">Aucune ronde lancée.</p>'}
- <h4 class="tournament-section-title">Classement provisoire</h4>${scoreboard(d)}</div>`;
+ <h4 class="tournament-section-title">${t.status==='finished'?'Classement final':'Classement provisoire'}</h4>${scoreboard(d)}</div>`;
 }
 const publicList=$('#public-tournaments'),publicDetail=$('#public-tournament-detail');
 if(publicList){
@@ -81,7 +88,8 @@ if(adminPanel){
   if(!canEditRoster && t.status==='active')html+='<p class="tournament-muted">Pour ajouter ou retirer des joueurs, enregistrez d’abord tous les résultats de la ronde en cours. La gestion se rouvrira avant la ronde suivante.</p>';
   html+=`<div class="tournament-admin-actions">${t.status!=='finished' && d.rounds.length<t.roundsPlanned && (!latest || complete)?'<button class="btn btn-primary" id="generate-round" type="button">'+(d.rounds.length?'Générer la ronde suivante':'Lancer la ronde 1')+'</button>':''}
  ${t.status==='active'&&complete?'<button class="btn btn-outline" id="finish-tournament" type="button">Terminer ce tournoi</button>':''}
- <button class="btn btn-outline" id="export-tournament" type="button">Exporter JSON ↓</button></div>
+ <button class="btn btn-outline" id="export-tournament" type="button">Exporter JSON ↓</button>
+ <button class="btn btn-outline" id="delete-tournament" type="button" style="border-color:#a83b40;color:#a83b40">Supprimer ce tournoi</button></div>
  <p class="tournament-admin-info">Les joueurs consultent leurs tables sur la page <a href="/tournois/">Tournois</a>. Seul le comité peut enregistrer les résultats. Les changements sont conservés dans la base du site.</p>`;
   detail.innerHTML=html;
   $('#add-player-form')?.addEventListener('submit',async e=>{e.preventDefault();const form=new FormData(e.target);await mutate('/'+selected+'/players',{name:form.get('name'),seedRating:form.get('seedRating')});});
@@ -91,6 +99,11 @@ if(adminPanel){
   $('#generate-round')?.addEventListener('click',()=>{if(confirm('Générer et publier les appariements de la prochaine ronde ?'))mutate('/'+selected+'/rounds',{});});
   $('#finish-tournament')?.addEventListener('click',()=>{if(confirm('Terminer définitivement ce tournoi ?'))mutate('/'+selected+'/finish',{});});
   detail.querySelectorAll('[data-save-result]').forEach(btn=>btn.addEventListener('click',()=>{const select=detail.querySelector(`[data-pairing-id="${btn.dataset.saveResult}"]`);if(!select.value){flash('Choisissez un résultat.');return;}mutate('/'+selected+'/pairings/'+btn.dataset.saveResult+'/result',{result:select.value});}));
+  $('#delete-tournament')?.addEventListener('click',async()=>{
+   if(!confirm(`Êtes-vous sûr de vouloir supprimer le tournoi « ${t.name} » ?\n\nTous ses joueurs, rondes, appariements et résultats seront définitivement supprimés. Cette action est irréversible.`))return;
+   const deleted=await mutate('/'+t.id+'/delete',{confirmation:t.name});
+   if(deleted){selected=null;flash(`Tournoi « ${t.name} » supprimé.`,true);await refreshAdmin();}
+  });
   $('#export-tournament')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(currentDetails,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`tournoi-ul-${selected}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);});
  };
  $('#tournament-login-form').addEventListener('submit',async e=>{e.preventDefault();const code=$('#organizer-code').value;try{await api('/session',{code});$('#organizer-code').value='';$('#login-flash').textContent='';showSession(true);}catch(err){$('#login-flash').textContent=err.message;}});
