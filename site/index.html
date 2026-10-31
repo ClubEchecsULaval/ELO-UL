@@ -1,32 +1,29 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Classement ELO — Université Laval</title>
-  <link rel="stylesheet" href="/assets/css/style.css" />
-</head>
-<body>
-  <main>
-    <h1>Classement ELO — Université Laval</h1>
-
-    <section class="card">
-      <h2>Classement local</h2>
-      <p><strong>Données fictives :</strong> ce classement provisoire affiche des joueurs de démonstration. Le site complet est en cours de construction.</p>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Rang</th>
-            <th>Joueur</th>
-            <th>ELO</th>
-          </tr>
-        </thead>
-        <tbody id="ranking-table"></tbody>
-      </table>
-    </section>
-  </main>
-
-  <script type="module" src="/assets/js/classement.js"></script>
-</body>
-</html>
+<!doctype html><html lang="fr-CA"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#172423"><meta name="description" content="Le Club d’échecs de l’Université Laval : activités, tournois, classement et système Elo UL."><link rel="icon" href="/favicon.svg" type="image/svg+xml"><title>Accueil | Club d'échecs de l'Université Laval</title><link rel="stylesheet" href="/assets/css/style.css"><script type="module" src="/assets/js/app.js"></script></head><body data-page="accueil">
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+<header class="site-header" id="haut"><div class="container header-inner">
+<a class="brand" href="/" aria-label="Club d'échecs de l'Université Laval — Accueil"><span class="brand-symbol" aria-hidden="true">♞</span><span class="brand-words"><strong>CLUB D'ÉCHECS</strong><small>UNIVERSITÉ LAVAL</small></span></a>
+<button type="button" class="mobile-menu-button" data-menu-toggle aria-controls="main-navigation" aria-expanded="false" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
+<nav class="main-nav" id="main-navigation" aria-label="Navigation principale"><a href="/" class="nav-link is-active" aria-current="page">Accueil</a>
+<a href="/calendrier/" class="nav-link " >Calendrier</a>
+<a href="/tournois/" class="nav-link " >Tournois</a>
+<a href="/elo-ul/" class="nav-link " >Elo UL</a>
+<a href="/classement/" class="nav-link " >Classement</a>
+<a href="/a-propos/" class="nav-link " >À propos</a></nav>
+<a class="header-cta" href="/calendrier/">Voir les activités <span aria-hidden="true">↗</span></a>
+</div></header>
+<main id="contenu"><section class="hero"><div class="container hero-grid"><div class="hero-copy"><div class="eyebrow"><span class="eyebrow-line"></span> VOTRE CLUB, VOTRE CAMPUS</div>
+<h1>Le jeu nous<br><em>rassemble.</em></h1><p class="hero-lead">Du premier coup de pion à la dernière ronde, il y a toujours une place pour vous autour de l'échiquier.</p>
+<div class="hero-actions"><a class="btn btn-primary" href="/calendrier/">Découvrir les activités <span aria-hidden="true">↗</span></a><a class="btn btn-ghost" href="/a-propos/">Découvrir le club <span aria-hidden="true">→</span></a></div>
+<div class="hero-note"><span class="online-dot"></span> Ouvert aux joueurs de tous les niveaux</div></div>
+<div class="hero-visual" aria-hidden="true"><div class="art-frame"><span class="art-label art-label-top">64 CASES · INFINIES POSSIBILITÉS</span><div class="chess-art"><span class="art-piece art-piece-top">♜</span><span class="art-piece art-piece-main">♞</span><span class="art-piece art-piece-low">♙</span></div><span class="art-label art-label-bottom">ÉCHECS  /  ULAVAL</span></div><div class="float-stamp">FAIRE<br>SON<br>PROCHAIN<br>COUP <b>↗</b></div></div></div></section>
+<section class="ticker" aria-label="Les valeurs du club"><div class="container ticker-inner"><span>STRATÉGIE</span><i>✦</i><span>COMMUNAUTÉ</span><i>✦</i><span>DÉCOUVERTE</span><i>✦</i><span>COMPÉTITION</span><i>✦</i><span>PLAISIR DE JOUER</span></div></section>
+<section class="section" id="activites"><div class="container"><div class="section-heading"><div><span class="overline">01 / LA VIE DU CLUB</span><h2>À chacun sa <em>façon de jouer.</em></h2></div><p>Des moments pour apprendre, réfléchir et relever de nouveaux défis. Explorez ce qui se passe au club.</p></div>
+<div class="feature-grid"><a class="feature-card card-first" href="/calendrier/"><span class="feature-top"><span>01</span><span class="arrow-round">↗</span></span><div class="feature-illustration"><span aria-hidden="true">♟</span></div><div><span class="feature-kicker">JOUER ENSEMBLE</span><h3>Nos activités</h3><p>Rencontres libres, ateliers et soirées autour de l'échiquier.</p></div></a><a class="feature-card card-second" href="/tournois/"><span class="feature-top"><span>02</span><span class="arrow-round">↗</span></span><div class="feature-illustration"><span aria-hidden="true">♛</span></div><div><span class="feature-kicker">SE DÉPASSER</span><h3>Les tournois</h3><p>Le plaisir de la compétition, du blitz aux parties lentes.</p></div></a><a class="feature-card card-third" href="/classement/"><span class="feature-top"><span>03</span><span class="arrow-round">↗</span></span><div class="feature-illustration"><span aria-hidden="true">♚</span></div><div><span class="feature-kicker">PROGRESSER</span><h3>Le classement</h3><p>Suivez les cotes Elo UL et la progression des joueurs.</p></div></a></div></div></section>
+<section class="section contrast-section"><div class="container contrast-grid"><div><span class="overline overline-light">02 / ELO UL</span><h2>Chaque partie<br><em>compte.</em></h2><p>Un classement interne conçu pour suivre votre progression et faire vivre une saine rivalité au sein de notre communauté.</p><a class="btn btn-light" href="/elo-ul/">Comprendre le système Elo <span aria-hidden="true">↗</span></a></div>
+<div class="formula-art" aria-label="Formule de mise à jour d'une cote Elo"><span class="formula-sub">LA FORMULE DU PROGRÈS</span><div>R′ = R + K(S − E)</div><p>Chaque résultat écrit une nouvelle ligne de votre parcours.</p><span class="formula-number" aria-hidden="true">64</span></div></div></section>
+<section class="section invite-section"><div class="container invite-inner"><span class="overline">03 / ON SE RETROUVE ?</span><h2>Le prochain coup<br>se joue <em>ensemble.</em></h2><p>Vous n'avez pas besoin d'être expert pour faire partie du club. Apportez votre curiosité, on s'occupe du reste.</p><a class="btn btn-primary" href="/a-propos/#rejoindre">Rejoindre le club ↗</a></div></section></main>
+<footer class="site-footer"><div class="container footer-top">
+<div class="footer-brand"><span class="footer-mark" aria-hidden="true">♞</span><h2>À chaque partie,<br>une nouvelle rencontre.</h2><p>Le Club d'échecs de l'Université Laval rassemble les passionnés, les curieux et les compétiteurs autour du même échiquier.</p></div>
+<div class="footer-col"><h3>Explorer</h3><a href="/calendrier/">Calendrier</a><a href="/tournois/">Tournois</a><a href="/elo-ul/">Elo UL</a></div>
+<div class="footer-col"><h3>Le club</h3><a href="/classement/">Classement</a><a href="/a-propos/">À propos</a><a href="/a-propos/#rejoindre">Nous rejoindre</a></div>
+</div><div class="container footer-bottom"><span>© <span data-current-year>2026</span> Club d'échecs de l'Université Laval</span><span>Créé pour la communauté échiquéenne de Québec.</span><a href="#haut">Retour en haut ↑</a></div></footer></body></html>
