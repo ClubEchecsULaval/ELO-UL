@@ -7,6 +7,7 @@ export const ulTournaments=pgTable('ul_tournaments',{
 export const ulTournamentPlayers=pgTable('ul_tournament_players',{
  id:serial('id').primaryKey(),tournamentId:integer('tournament_id').notNull().references(()=>ulTournaments.id,{onDelete:'cascade'}),
  name:text('name').notNull(),normalizedName:text('normalized_name').notNull(),seedRating:integer('seed_rating').notNull().default(1200),
+ active:boolean('active').notNull().default(true),
 },t=>[uniqueIndex('ul_tournament_players_name_unq').on(t.tournamentId,t.normalizedName)]);
 export const ulTournamentRounds=pgTable('ul_tournament_rounds',{
  id:serial('id').primaryKey(),tournamentId:integer('tournament_id').notNull().references(()=>ulTournaments.id,{onDelete:'cascade'}),

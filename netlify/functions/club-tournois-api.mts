@@ -25,7 +25,7 @@ async function readDetails(id:number, admin=false){
  const rm=new Map(rs.map(r=>[r.id,r.number]));
  const games=matches.map(p=>({id:p.id,roundId:p.roundId,round:rm.get(p.roundId),board:p.board,whitePlayerId:p.whitePlayerId,blackPlayerId:p.blackPlayerId,result:p.result}));
  const score=standings(ps,games);
- return {tournament:t,players:ps.map(p=>({id:p.id,name:p.name,seedRating:p.seedRating})),rounds:rs.map(r=>({id:r.id,number:r.number,status:r.status,pairings:games.filter(g=>g.roundId===r.id)})),standings:score.map(({opponents,...s})=>s)};
+ return {tournament:t,players:ps.map(p=>({id:p.id,name:p.name,seedRating:p.seedRating,active:p.active})),rounds:rs.map(r=>({id:r.id,number:r.number,status:r.status,pairings:games.filter(g=>g.roundId===r.id)})),standings:score.map(({opponents,...s})=>s)};
 }
 
 async function createTournament(body:any){
@@ -34,15 +34,31 @@ async function createTournament(body:any){
  const [record]=await db.insert(tournaments).values({name,roundsPlanned:number,format:'swiss',status:'draft'}).returning();
  return {id:record.id,tournament:record};
 }
+/**
+ * Participants modifiables avant le début ou ENTRE deux rondes terminées.
+ * Ne jamais modifier le roster d'une ronde dont des parties restent en cours.
+ * À exécuter après le verrouillage de la ligne du tournoi (FOR UPDATE).
+ */
+async function assertRosterEditable(tid:number,tx:any){
+ const t=await findTournament(tid,tx);
+ if(t.status==='finished')fail(409,'Tournoi terminé : participants non modifiables.');
+ const rs=await tx.select().from(rounds).where(eq(rounds.tournamentId,tid)).orderBy(desc(rounds.number));
+ if(rs.length){
+  if(rs[0].status!=='finished')fail(409,'Terminez toutes les parties de la ronde actuelle avant de modifier les joueurs.');
+  if(rs.length>=t.roundsPlanned)fail(409,'Toutes les rondes sont terminées.');
+ }
+ return t;
+}
+
 async function addPlayer(tid:number,body:any){
  const name=validText(body.name,100);const seedRating=body.seedRating===undefined||body.seedRating===''?1200:Number(body.seedRating);
  if(!Number.isInteger(seedRating)||seedRating<0||seedRating>3500)fail(422,'Cote initiale entre 0 et 3500 requise.');
  return db.transaction(async tx=>{
   await tx.execute(sql`SELECT id FROM ul_tournaments WHERE id = ${tid} FOR UPDATE`);
-  const t=await findTournament(tid,tx);if(t.status!=='draft')fail(409,'Les inscriptions manuelles sont fermées depuis le lancement du tournoi.');
+  await assertRosterEditable(tid,tx);
   const existing=await tx.select().from(players).where(eq(players.tournamentId,tid));
   if(existing.length>=128)fail(409,'Maximum de 128 joueurs.');
-  if(existing.some(p=>p.normalizedName===normalized(name)))fail(409,'Ce joueur est déjà dans le tournoi.');
+  if(existing.some(p=>p.normalizedName===normalized(name)))fail(409,'Ce joueur existe déjà. Utilisez Réintégrer s’il est retiré.');
   const [player]=await tx.insert(players).values({tournamentId:tid,name,normalizedName:normalized(name),seedRating}).returning();
   return {player};
  });
@@ -63,30 +79,34 @@ async function addPlayersBatch(tid:number,body:any){
  if(uniq.size!==incoming.length)fail(409,'Un nom est répété dans la liste.');
  return db.transaction(async tx=>{
   await tx.execute(sql`SELECT id FROM ul_tournaments WHERE id = ${tid} FOR UPDATE`);
-  const t=await findTournament(tid,tx);if(t.status!=='draft')fail(409,'Ajout impossible après le lancement.');
+  await assertRosterEditable(tid,tx);
   const existing=await tx.select().from(players).where(eq(players.tournamentId,tid));
   if(existing.length+incoming.length>128)fail(409,'Maximum de 128 joueurs.');
-  if(incoming.some(p=>existing.some(old=>old.normalizedName===p.normalizedName)))fail(409,'Un nom de la liste existe déjà dans ce tournoi.');
+  if(incoming.some(p=>existing.some(old=>old.normalizedName===p.normalizedName)))fail(409,'Un nom existe déjà dans ce tournoi. Réintégrez le joueur retiré plutôt que de le dupliquer.');
   await tx.insert(players).values(incoming);
   return {ok:true,added:incoming.length};
  });
 }
-async function removePlayer(tid:number,pid:number){
+// Retrait non destructif : les parties et points déjà acquis sont conservés.
+async function setPlayerActive(tid:number,pid:number,active:boolean){
  return db.transaction(async tx=>{
   await tx.execute(sql`SELECT id FROM ul_tournaments WHERE id = ${tid} FOR UPDATE`);
-  const t=await findTournament(tid,tx);if(t.status!=='draft')fail(409,'Impossible de retirer un joueur après le début du tournoi.');
+  await assertRosterEditable(tid,tx);
   const [p]=await tx.select().from(players).where(and(eq(players.id,pid),eq(players.tournamentId,tid)));
   if(!p)fail(404,'Joueur introuvable.');
-  await tx.delete(players).where(eq(players.id,pid));return {ok:true};
+  if(p.active===active)return {ok:true,active};
+  await tx.update(players).set({active}).where(eq(players.id,pid));
+  return {ok:true,active};
  });
 }
+
 async function newRound(tid:number){
  return db.transaction(async tx=>{
   await tx.execute(sql`SELECT id FROM ul_tournaments WHERE id = ${tid} FOR UPDATE`);
   const t=await findTournament(tid,tx);
   if(t.status==='finished')fail(409,'Ce tournoi est terminé.');
   const ps=await tx.select().from(players).where(eq(players.tournamentId,tid));
-  if(ps.length<2)fail(409,'Ajoutez au moins deux joueurs avant la première ronde.');
+  if(ps.filter(p=>p.active).length<2)fail(409,'Il faut au moins deux joueurs actifs pour lancer une ronde.');
   const rs=await tx.select().from(rounds).where(eq(rounds.tournamentId,tid)).orderBy(asc(rounds.number));
   const n=rs.length+1;if(n>t.roundsPlanned)fail(409,'Nombre maximal de rondes atteint.');
   const previous=rs.length?await tx.select().from(pairs).where(inArray(pairs.roundId,rs.map(r=>r.id))):[];
@@ -151,7 +171,8 @@ async function route(req:Request){
  const id=validId(parts[0]);
  if(parts[1]==='players'&&parts.length===2)return withNoCache(await addPlayer(id,body),201);
  if(parts[1]==='players'&&parts[2]==='batch'&&parts.length===3)return withNoCache(await addPlayersBatch(id,body),201);
- if(parts[1]==='players'&&parts[3]==='remove'&&parts.length===4)return withNoCache(await removePlayer(id,validId(parts[2])));
+ if(parts[1]==='players'&&parts[3]==='remove'&&parts.length===4)return withNoCache(await setPlayerActive(id,validId(parts[2]),false));
+ if(parts[1]==='players'&&parts[3]==='reinstate'&&parts.length===4)return withNoCache(await setPlayerActive(id,validId(parts[2]),true));
  if(parts[1]==='rounds'&&parts.length===2)return withNoCache(await newRound(id),201);
  if(parts[1]==='pairings'&&parts[3]==='result'&&parts.length===4)return withNoCache(await saveResult(id,validId(parts[2]),body));
  if(parts[1]==='finish'&&parts.length===2)return withNoCache(await finishTournament(id));
